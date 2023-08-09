@@ -72,6 +72,6 @@ export default function Dashboard() {
 }
 
 export const movieLoader = async () => {
-  const res = await fetch("http://localhost:3000/movie");
+  const res = await fetch("http://localhost:5000/movie");
   return res.json();
 };

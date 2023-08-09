@@ -44,6 +44,9 @@ export default function Profile() {
 
   const drawerDisclosure = useDisclosure();
 
+  const openEdit = () => {
+    drawerDisclosure.onOpen();
+  };
   return (
     <div>
       <Flex alignItems="center">
@@ -60,7 +63,7 @@ export default function Profile() {
         <Spacer />
         <HStack spacing={2}>
           <Button
-            onClick={onOpen}
+            onClick={openEdit}
             colorScheme="blackAlpha"
             leftIcon={<EditIcon />}
           >
@@ -175,7 +178,7 @@ export const profileLoader = async () => {
   return res.json();
 };
 export const dataLoader = async () => {
-  const res = await fetch("http://localhost:5000/data");
+  const res = await fetch("http://localhost:3000/data");
   return res.json();
 };
 
