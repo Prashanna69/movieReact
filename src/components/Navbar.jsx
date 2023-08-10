@@ -9,7 +9,6 @@ import {
   MenuItem,
   MenuList,
   Spacer,
-  Tooltip,
   Wrap,
   WrapItem,
   MenuOptionGroup,
@@ -21,6 +20,13 @@ import {
   PopoverArrow,
   PopoverHeader,
   PopoverBody,
+  AlertDialog,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  Button,
 } from "@chakra-ui/react";
 import {
   BellIcon,
@@ -33,8 +39,12 @@ import Profile from "../pages/Profile";
 import Setting from "../pages/Setting";
 
 import { NavLink } from "react-router-dom";
+import { useDisclosure } from "@chakra-ui/react";
+import React from "react";
 
 export default function Navbar() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
   return (
     <>
       <Flex as="nav" p="2rem" alignItems="center" bg="bisque">
@@ -43,7 +53,7 @@ export default function Navbar() {
         </Heading>
         <Spacer />
         <HStack spacing="1.5rem">
-          <Popover placement="left">
+          <Popover placement="left" colorScheme="green">
             <PopoverTrigger>
               <BellIcon
                 boxSize={8}
@@ -99,13 +109,35 @@ export default function Navbar() {
                 </MenuItemOption>
               </MenuOptionGroup>
               <MenuDivider />
-              <MenuItem>
-                <NavLink to="/Profile">Profile</NavLink>
-              </MenuItem>
-              <MenuItem>
-                <NavLink to="/Setting">Setting</NavLink>
-              </MenuItem>
-              <MenuItem>Logout</MenuItem>
+              <NavLink to="/Profile">
+                <MenuItem>Profile</MenuItem>
+              </NavLink>
+              <NavLink to="/Setting">
+                <MenuItem>Setting</MenuItem>
+              </NavLink>
+              <MenuItem onClick={onOpen}>Logout</MenuItem>
+              <AlertDialog
+                isOpen={isOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+              >
+                <AlertDialogOverlay>
+                  <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                      Log out?
+                    </AlertDialogHeader>
+                    <AlertDialogBody>Are you sure?</AlertDialogBody>
+                    <AlertDialogFooter>
+                      <Button ref={cancelRef} onClick={onClose}>
+                        Cancel
+                      </Button>
+                      <Button colorScheme="red" onClick={onClose} ml={3}>
+                        Logout
+                      </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialogOverlay>
+              </AlertDialog>
             </MenuList>
           </Menu>
         </HStack>
