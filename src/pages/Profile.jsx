@@ -43,10 +43,6 @@ export default function Profile() {
   const modalDisclosure = useDisclosure();
 
   const drawerDisclosure = useDisclosure();
-
-  const openEdit = () => {
-    drawerDisclosure.onOpen();
-  };
   return (
     <div>
       <Flex alignItems="center">
