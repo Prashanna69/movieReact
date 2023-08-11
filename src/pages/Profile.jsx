@@ -20,6 +20,11 @@ import {
   AlertDialogHeader,
   AlertDialogBody,
   AlertDialogFooter,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerHeader,
 } from "@chakra-ui/react";
 
 import React from "react";
@@ -32,8 +37,12 @@ export default function Profile() {
   const { profile, data } = useLoaderData();
   const { User_Id, Name, Address1, Address2, Email, Phone, Profile, Country } =
     profile;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = React.useRef();
+
+  const modalDisclosure = useDisclosure();
+
+  const drawerDisclosure = useDisclosure();
 
   return (
     <div>
@@ -50,9 +59,21 @@ export default function Profile() {
         </Flex>
         <Spacer />
         <HStack spacing={2}>
-          <Button colorScheme="blackAlpha" leftIcon={<EditIcon />}>
+          <Button
+            onClick={onOpen}
+            colorScheme="blackAlpha"
+            leftIcon={<EditIcon />}
+          >
             Edit
           </Button>
+          <Drawer isOpen={isOpen} placement="right" onClose={onClose}>
+            <DrawerOverlay />
+            <DrawerContent>
+              <DrawerCloseButton />
+              <DrawerHeader>Edit</DrawerHeader>
+              <Divider />
+            </DrawerContent>
+          </Drawer>
           <Button leftIcon={<InfoIcon />}>Reset Password</Button>
         </HStack>
       </Flex>
@@ -115,11 +136,7 @@ export default function Profile() {
             </CardHeader>
             <Divider />
             <CardBody>
-              <AlertDialog
-                isOpen={isOpen}
-                leastDestructiveRef={cancelRef}
-                onClose={onClose}
-              >
+              <AlertDialog isOpen={isOpen} onClose={onClose}>
                 <AlertDialogOverlay>
                   <AlertDialogContent>
                     <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -131,9 +148,7 @@ export default function Profile() {
                     </AlertDialogBody>
 
                     <AlertDialogFooter>
-                      <Button ref={cancelRef} onClick={onClose}>
-                        Cancel
-                      </Button>
+                      <Button onClick={onClose}>Cancel</Button>
                       <Button colorScheme="red" onClick={onClose} ml={3}>
                         Delete
                       </Button>
