@@ -1,13 +1,12 @@
 import { EditIcon, InfoIcon, TimeIcon } from "@chakra-ui/icons";
 import {
+  AlertDialog,
   Avatar,
-  Box,
   Button,
   Card,
   CardBody,
   CardHeader,
   Divider,
-  Editable,
   Flex,
   HStack,
   Heading,
@@ -15,70 +14,29 @@ import {
   ListItem,
   Spacer,
   Text,
+  useDisclosure,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
 
-import { BarChart, Bar } from "recharts";
+import React from "react";
+
+import { BarChart, Bar, CartesianGrid, XAxis, YAxis, Legend } from "recharts";
 
 import { useLoaderData } from "react-router-dom";
 
 export default function Profile() {
-  const users = useLoaderData();
+  const { profile, data } = useLoaderData();
   const { User_Id, Name, Address1, Address2, Email, Phone, Profile, Country } =
-    users;
-
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page D",
-      uv: 2000,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page E",
-      uv: 1780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page f",
-      uv: 3780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: "Page G",
-      uv: 5780,
-      pv: 2908,
-      amt: 2000,
-    },
-  ];
+    profile;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = React.useRef();
 
   return (
-    <>
+    <div>
       <Flex alignItems="center">
         <Avatar size="xl" src={Profile} ml="2rem"></Avatar>
         <Flex flexDirection="column">
@@ -107,14 +65,19 @@ export default function Profile() {
           <HStack>
             <CardBody>
               <List>
-                {Object.entries(users).map(([key, value]) => {
+                {Object.entries(profile).map(([key, value]) => {
                   return (
                     key !== "Profile" && (
                       <ListItem key={key}>
                         <Heading size="sm" textTransform="uppercase">
                           {key}
                         </Heading>
-                        <Text pt="2" fontSize="md" color="gray">
+                        <Text
+                          pt="2"
+                          fontSize="md"
+                          color="gray"
+                          cursor="inherit"
+                        >
                           {value}
                         </Text>
                         <Divider />
@@ -132,33 +95,81 @@ export default function Profile() {
               <Heading>Stats</Heading>
             </CardHeader>
             <CardBody>
-              <BarChart width={600} height={100} data={data}>
-                <Bar dataKey="uv" fill="green" />
-              </BarChart>
+              {data && (
+                <BarChart width={600} height={200} data={data || []}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Legend />
+                  <Bar dataKey="uv" fill="#8884d8" />
+                  <Bar dataKey="pv" fill="#82ca9d" />
+                  <Bar dataKey="amt" fill="#ffc658" />
+                </BarChart>
+              )}
             </CardBody>
-            <Divider />
           </Card>
-          <Card bg="white" minW="500px" h="auto" ml="2rem" mt="3rem">
+          <Divider />
+          <Card bg="white" minW="500px" h="auto" ml="2rem" mt="1.5rem">
             <CardHeader>
               <Heading>Data Management</Heading>
             </CardHeader>
             <Divider />
             <CardBody>
-              <Button colorScheme="red" maxW="170px">
+              <AlertDialog
+                isOpen={isOpen}
+                leastDestructiveRef={cancelRef}
+                onClose={onClose}
+              >
+                <AlertDialogOverlay>
+                  <AlertDialogContent>
+                    <AlertDialogHeader fontSize="lg" fontWeight="bold">
+                      Delete Customer
+                    </AlertDialogHeader>
+
+                    <AlertDialogBody>
+                      Are you sure? You can't undo this action afterwards.
+                    </AlertDialogBody>
+
+                    <AlertDialogFooter>
+                      <Button ref={cancelRef} onClick={onClose}>
+                        Cancel
+                      </Button>
+                      <Button colorScheme="red" onClick={onClose} ml={3}>
+                        Delete
+                      </Button>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialogOverlay>
+              </AlertDialog>
+              <Button colorScheme="red" maxW="170px" onClick={onOpen}>
                 Delete Account
               </Button>
               <Text color="gray" mt="1rem" fontSize="1.1rem">
-                Remove this customer’s chart if he requested that, if not please
+                Remove this customer's chart if he requested that, if not please
                 be aware that what has been deleted can never brought back
               </Text>
             </CardBody>
           </Card>
         </Flex>
       </Flex>
-    </>
+    </div>
   );
 }
 export const profileLoader = async () => {
   const res = await fetch("http://localhost:4000/User");
   return res.json();
+};
+export const dataLoader = async () => {
+  const res = await fetch("http://localhost:5000/data");
+  return res.json();
+};
+
+export const resolveProfileData = async () => {
+  const profile = await profileLoader();
+  const data = await dataLoader();
+
+  return {
+    profile,
+    data,
+  };
 };
