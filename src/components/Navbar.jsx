@@ -27,6 +27,7 @@ import {
   AlertDialogOverlay,
   AlertDialogContent,
   Button,
+  Hide,
 } from "@chakra-ui/react";
 import {
   BellIcon,
@@ -35,16 +36,21 @@ import {
   ViewOffIcon,
 } from "@chakra-ui/icons";
 
-import Profile from "../pages/Profile";
-import Setting from "../pages/Setting";
-
 import { NavLink } from "react-router-dom";
 import { useDisclosure } from "@chakra-ui/react";
-import React from "react";
+import React, { useState, useMemo } from "react";
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
+  const [value, setValue] = useState("act");
+  const avatarIcon = useMemo(() => {
+    if (value === "noDis")
+      return <NotAllowedIcon color="red" bg="gray.100" borderRadius="2rem" />;
+    if (value === "hide")
+      return <ViewOffIcon color="black" bg="gray.200" borderRadius="2rem" />;
+    return <CheckCircleIcon color="Green" />;
+  }, [value]);
   return (
     <>
       <Flex as="nav" p="2rem" alignItems="center" bg="bisque">
@@ -84,14 +90,22 @@ export default function Navbar() {
                     size="md"
                     name="Profile"
                     src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aHVtYW4lMjBwb3RyYWl0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+                    border=" 2px solid"
                   >
-                    <AvatarBadge boxSize="1.25em" bg="green.500" />
+                    <AvatarBadge boxSize="1.25em" border="none">
+                      {avatarIcon}
+                    </AvatarBadge>
                   </Avatar>
                 </WrapItem>
               </Wrap>
             </MenuButton>
             <MenuList>
-              <MenuOptionGroup defaultValue="asc" title="Status" type="radio">
+              <MenuOptionGroup
+                value={value}
+                onChange={(value) => setValue(value)}
+                title="Status"
+                type="radio"
+              >
                 <MenuItemOption
                   value="act"
                   icon={<CheckCircleIcon color="Green" />}

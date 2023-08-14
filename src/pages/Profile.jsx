@@ -1,9 +1,11 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Card, SimpleGrid, Text, Flex } from "@chakra-ui/react";
 
 export default function Profile() {
   return (
     <>
-      <Box w="100%" h="auto"></Box>
+      <Flex>
+        <Card bg="gray.400" minW="500px" h="auto"></Card>
+      </Flex>
     </>
   );
 }
