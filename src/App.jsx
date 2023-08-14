@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 import RootLayout from "./Layout/RootLayout";
 import Profile from "./pages/Profile";
-import Dashboard from "./pages/Dashboard";
+import Dashboard, { movieLoader } from "./pages/Dashboard";
 import Setting from "./pages/Setting";
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
       <Route path="/" element={<RootLayout />}>
         <Route path="/profile" element={<Profile />} />
         <Route path="/setting" element={<Setting />} />
-        <Route index element={<Dashboard />} />
+        <Route index element={<Dashboard />} loader={movieLoader} />
       </Route>
     )
   );
