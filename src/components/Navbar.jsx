@@ -53,7 +53,7 @@ export default function Navbar() {
   }, [value]);
   return (
     <>
-      <Flex as="nav" p="2rem" alignItems="center" bg="bisque">
+      <Flex as="nav" p="2rem" alignItems="center" bg="green">
         <Heading as="h1" fontSize="3rem">
           <NavLink to="/">Cineplex</NavLink>
         </Heading>
