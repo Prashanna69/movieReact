@@ -9,7 +9,7 @@ export default function RootLayout() {
         <GridItem as="nav" p="10px">
           <Navbar />
         </GridItem>
-        <GridItem as="main" w="auto" bg="green.200">
+        <GridItem as="main" w="auto" bg="green.200" p="10px">
           <Outlet />
         </GridItem>
       </Grid>

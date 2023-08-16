@@ -36,7 +36,7 @@ import {
   ViewOffIcon,
 } from "@chakra-ui/icons";
 
-import { NavLink } from "react-router-dom";
+import { NavLink, useLoaderData } from "react-router-dom";
 import { useDisclosure } from "@chakra-ui/react";
 import React, { useState, useMemo } from "react";
 
@@ -51,15 +51,18 @@ export default function Navbar() {
       return <ViewOffIcon color="black" bg="gray.200" borderRadius="2rem" />;
     return <CheckCircleIcon color="Green" />;
   }, [value]);
+  const Pic = useLoaderData();
+  const { Profile } = Pic;
+
   return (
     <>
-      <Flex as="nav" p="2rem" alignItems="center" bg="green">
+      <Flex as="nav" p="2rem" alignItems="center" bg="bisque">
         <Heading as="h1" fontSize="3rem">
           <NavLink to="/">Cineplex</NavLink>
         </Heading>
         <Spacer />
         <HStack spacing="1.5rem">
-          <Popover placement="left" colorScheme="green">
+          <Popover placement="left" colorScheme="bisque">
             <PopoverTrigger>
               <BellIcon
                 boxSize={8}
@@ -89,7 +92,7 @@ export default function Navbar() {
                   <Avatar
                     size="md"
                     name="Profile"
-                    src="https://images.unsplash.com/photo-1499996860823-5214fcc65f8f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aHVtYW4lMjBwb3RyYWl0fGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+                    src={Profile}
                     border=" 2px solid"
                   >
                     <AvatarBadge boxSize="1.25em" border="none">
@@ -159,3 +162,7 @@ export default function Navbar() {
     </>
   );
 }
+export const profileLoader = async () => {
+  const res = await fetch("http://localhost:4000/User");
+  return res.json();
+};
